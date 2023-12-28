@@ -1,4 +1,6 @@
+using LeonFitness.Models;
 using Microsoft.AspNetCore.Builder;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.FileSystemGlobbing.Internal.Patterns;
 
 namespace LeonFitness
@@ -11,6 +13,8 @@ namespace LeonFitness
 
             // Add services to the container.
             builder.Services.AddControllersWithViews();
+            builder.Services.AddDbContext<Context>(options =>
+               options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
             var app = builder.Build();
 
@@ -22,6 +26,7 @@ namespace LeonFitness
                 app.UseHsts();
             }
 
+
             app.UseHttpsRedirection();
             app.UseStaticFiles();
 
@@ -31,11 +36,11 @@ namespace LeonFitness
 
             app.MapControllerRoute(
                 name: "areas",
-                pattern:"{Area}/{Controller=Home}/{Action=Index}/{id?}"
+                pattern:"{area=Login}/{controller=Login}/{action=Index}/{id?}"
                 );
-            app.MapControllerRoute(
-                name: "default",
-                pattern: "{controller=Home}/{action=Index}/{id?}");
+            //app.MapControllerRoute(
+            //    name: "default",
+            //    pattern: "{controller=Home}/{action=Index}/{id?}");
 
             app.Run();
         }
